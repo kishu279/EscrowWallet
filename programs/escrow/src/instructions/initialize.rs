@@ -16,13 +16,13 @@ pub struct InitailizeEscrow<'info> {
         payer = initializer,
         space = 8 + 32 + 32 + 32 + 8 + 32 + 8 + 2 + 32 + 8
     )]
-    pub escrow: Account<'info, Escrow>,
+    pub escrow: Box<Account<'info, Escrow>>,
 
     #[account(mut)]
     pub initializer: Signer<'info>,
 
     #[account(mut)]
-    pub initializer_token_account: Account<'info, TokenAccount>,
+    pub initializer_token_account: Box<Account<'info, TokenAccount>>,
 
     #[account(
         seeds = [b"initializer_vault", escrow.key().as_ref()],
@@ -37,7 +37,7 @@ pub struct InitailizeEscrow<'info> {
         associated_token::mint = initializer_mint,
         associated_token::authority = initializer_vault_authority
     )]
-    pub initilaizer_vault: Account<'info, TokenAccount>,
+    pub initilaizer_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         seeds = [b"reciever_vault", escrow.key().as_ref()], 
@@ -52,7 +52,7 @@ pub struct InitailizeEscrow<'info> {
         associated_token::mint = reciever_mint,
         associated_token::authority = reciever_vault_authority
     )]
-    pub reciever_vault: Account<'info, TokenAccount>,
+    pub reciever_vault: Box<Account<'info, TokenAccount>>,
 
     pub initializer_mint: Account<'info, Mint>,
 

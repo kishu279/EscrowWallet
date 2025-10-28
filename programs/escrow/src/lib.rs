@@ -14,7 +14,7 @@ pub mod escrow {
     use super::*;
 
     pub fn initialize_escrow(
-        ctx: Context<InitailizeEscrow>,
+        ctx: Context<InitializeEscrow>,
         initilaizer_amount: u64,
         reciever_amount: u64,
         expiry: i64,
@@ -22,7 +22,7 @@ pub mod escrow {
         fee_basis_point: u16,
         fee_collector: Pubkey,
     ) -> Result<()> {
-        InitailizeEscrow::initialize(
+        InitializeEscrow::initialize(
             ctx,
             initilaizer_amount,
             reciever_amount,

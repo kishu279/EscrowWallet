@@ -10,7 +10,7 @@ use anchor_spl::{
 
 #[event_cpi]
 #[derive(Accounts)]
-pub struct InitailizeEscrow<'info> {
+pub struct InitializeEscrow<'info> {
     #[account(
         init,
         payer = initializer,
@@ -21,7 +21,12 @@ pub struct InitailizeEscrow<'info> {
     #[account(mut)]
     pub initializer: Signer<'info>,
 
-    #[account(mut)]
+    #[account(mut
+        // init_if_needed,
+        // payer = initializer,
+        // associated_token::mint = initializer_mint,
+        // associated_token::authority = initializer
+    )]
     pub initializer_token_account: Box<Account<'info, TokenAccount>>,
 
     #[account(
@@ -67,9 +72,9 @@ pub struct InitailizeEscrow<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-impl<'info> InitailizeEscrow<'info> {
+impl<'info> InitializeEscrow<'info> {
     pub fn initialize(
-        ctx: Context<InitailizeEscrow>,
+        ctx: Context<InitializeEscrow>,
         initilaizer_amount: u64,
         reciever_amount: u64,
         expiry: i64,

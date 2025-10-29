@@ -21,12 +21,7 @@ pub struct InitializeEscrow<'info> {
     #[account(mut)]
     pub initializer: Signer<'info>,
 
-    #[account(mut
-        // init_if_needed,
-        // payer = initializer,
-        // associated_token::mint = initializer_mint,
-        // associated_token::authority = initializer
-    )]
+    #[account(mut)]
     pub initializer_token_account: Box<Account<'info, TokenAccount>>,
 
     #[account(

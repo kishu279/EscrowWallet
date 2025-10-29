@@ -79,17 +79,9 @@ pub struct ClaimEscrow<'info> {
     pub receiver_vault_to_initializer: Box<Account<'info, TokenAccount>>,
 
     #[account(
-        seeds = [b"fee_collector", escrow.key().as_ref()],
-        bump
-    )]
-    /// CHECK: PDA authority that owns fee collector token accounts
-    pub fee_collector_authority: UncheckedAccount<'info>,
-
-    #[account(
-        init_if_needed,
-        payer = receiver,
+        mut,
         associated_token::mint = initializer_mint,
-        associated_token::authority = fee_collector_authority
+        associated_token::authority = escrow.fee_collector
     )]
     pub fee_collector_initializer_account: Box<Account<'info, TokenAccount>>,
 
@@ -112,7 +104,7 @@ impl<'info> ClaimEscrow<'info> {
         let clock = Clock::get()?;
 
         require!(
-            clock.unix_timestamp >= escrow.expiry,
+            clock.unix_timestamp <= escrow.expiry,
             EscrowError::EscrowExpired
         );
 
@@ -193,7 +185,7 @@ impl<'info> ClaimEscrow<'info> {
         // get the reciever vault bump, seeds and signer
         let reciever_vault_bumps = ctx.bumps.reciever_vault_authority;
         let receiver_seeds = &[
-            b"receiver_vault",
+            b"reciever_vault",
             escrow_key.as_ref(),
             &[reciever_vault_bumps],
         ];

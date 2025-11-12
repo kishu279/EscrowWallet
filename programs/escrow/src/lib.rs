@@ -33,4 +33,8 @@ pub mod escrow {
             fee_collector,
         )
     }
+
+    pub fn claim_escrow(ctx: Context<Claim>) -> Result<()> {
+        Claim::claim_escrow(ctx)
+    }
 }

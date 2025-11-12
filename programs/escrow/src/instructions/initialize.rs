@@ -30,7 +30,7 @@ pub struct InitializeEscrow<'info> {
     pub initializer_token_account: Account<'info, TokenAccount>,
 
     #[account(
-        seeds = [b"initializer_vault".as_ref(), escrow.key().as_ref()],
+        seeds = [b"initializer_vault", escrow.key().as_ref()],
         bump,
     )]
     /// CHECK: pda signer
@@ -45,7 +45,7 @@ pub struct InitializeEscrow<'info> {
     pub initializer_vault: Account<'info, TokenAccount>,
     
     #[account(
-        seeds = [b"receiver_vault".as_ref(), escrow.key().as_ref()],
+        seeds = [b"receiver_vault", escrow.key().as_ref()],
         bump,
     )]
     /// CHECK: pda signer

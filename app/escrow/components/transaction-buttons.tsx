@@ -31,6 +31,7 @@ import { useSolanaProvider } from "@/hook/solana-provider";
 import { PublicKey } from "@solana/web3.js";
 import WrapSolButton from "@/components/wrap-sol-button";
 import { NATIVE_MINT } from "@solana/spl-token";
+import { toast } from "sonner";
 
 interface TransactBttnProps {
   logo: string;
@@ -141,6 +142,10 @@ export default function TransactBttn(props: TransactBttnProps) {
         );
 
         console.log("Transaction ID:", transaction);
+
+        toast("Escrow Initialized", {
+          description: `Id: ${transaction}`,
+        });
       } catch (err) {
         console.error("Error initializing escrow:", err);
       }

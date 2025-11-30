@@ -2,6 +2,8 @@
 
 import React from "react";
 import WalletButton from "./WalletButton";
+import Link from "next/link";
+import { History } from "lucide-react";
 
 export default function NavHeader() {
   return (
@@ -11,7 +13,15 @@ export default function NavHeader() {
           Escrow
         </h1>
 
-        <WalletButton />
+        <div className="flex items-center gap-4">
+          <Link href="/history">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-sky-600 transition-colors">
+              <History className="h-4 w-4" />
+              History
+            </button>
+          </Link>
+          <WalletButton />
+        </div>
       </div>
     </section>
   );

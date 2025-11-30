@@ -87,7 +87,7 @@ describe("escrow", () => {
       programId: TOKEN_PROGRAM_ID,
     });
 
-    // Create account instruction for mint X
+    // Create account instruction for mint Y
     const createAccountInstructionY = anchor.web3.SystemProgram.createAccount({
       fromPubkey: provider.wallet.publicKey,
       newAccountPubkey: mintY.publicKey,

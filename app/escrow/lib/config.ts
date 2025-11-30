@@ -4,7 +4,7 @@ const TOKENS_MINT_ADDRESSES = [
   { name: "USDC", address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU" },
   { name: "USDC-DEV", address: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr" },
   {
-    name: "SOL",
+    name: "SOL (Wrapped)",
     address: "So11111111111111111111111111111111111111112",
   },
 ];

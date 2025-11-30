@@ -29,6 +29,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { TOKENS_MINT_ADDRESSES } from "@/lib/config";
 import { useSolanaProvider } from "@/hook/solana-provider";
 import { PublicKey } from "@solana/web3.js";
+import WrapSolButton from "@/components/wrap-sol-button";
+import { NATIVE_MINT } from "@solana/spl-token";
 
 interface TransactBttnProps {
   logo: string;
@@ -99,9 +101,16 @@ export default function TransactBttn(props: TransactBttnProps) {
       }
 
       try {
-        // Get token mint accounts to determine decimals
-        const initializerMint = new PublicKey(data.tokenToGive);
-        const receiverMint = new PublicKey(data.tokenToReceive);
+        const initializerMint = new PublicKey(
+          data.tokenToGive.toString() === NATIVE_MINT.toBase58()
+            ? NATIVE_MINT
+            : data.tokenToGive
+        );
+        const receiverMint = new PublicKey(
+          data.tokenToReceive.toString() === NATIVE_MINT.toBase58()
+            ? NATIVE_MINT
+            : data.tokenToReceive
+        );
 
         const [initializerMintInfo, receiverMintInfo] = await Promise.all([
           provider.connection.getParsedAccountInfo(initializerMint),
@@ -221,6 +230,8 @@ export default function TransactBttn(props: TransactBttnProps) {
                 </div>
               </div>
             )}
+
+            {props.type === "initialize" && connected && <WrapSolButton />}
 
             {props.type === "initialize" ? (
               <>

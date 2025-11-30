@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Web3WalletProvider from "@/components/wallet-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         >
           <section className="bg-neutral-200 h-screen text-neutral-900">
             {children}
+            <Toaster />
           </section>
         </body>
       </Web3WalletProvider>

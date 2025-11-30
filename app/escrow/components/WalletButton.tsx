@@ -13,19 +13,16 @@ import { Adapter } from "@solana/wallet-adapter-base";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { ChevronDown, LogOut, Wallet } from "lucide-react";
+import { shortenAddress } from "@/lib/utils";
 
 export default function WalletButton() {
   const { connected, connect, disconnect, publicKey, wallet, wallets, select } =
     useWallet();
-  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const connectWallet = React.useCallback(
     async (adapter: Adapter) => {
-      try {
-        select(adapter.name);
-      } catch (error) {
-        console.error("Failed to select wallet:", error);
-      }
+      select(adapter.name);
+      await connect();
     },
     [select]
   );
@@ -33,17 +30,6 @@ export default function WalletButton() {
   const disconnectWallet = React.useCallback(() => {
     disconnect();
   }, [disconnect]);
-
-  const shortenAddress = (address: string) => {
-    return `${address.slice(0, 4)}...${address.slice(-4)}`;
-  };
-
-  React.useEffect(() => {
-    console.log("wallets", wallets);
-    console.log("connected", connected);
-    console.log("wallet", wallet);
-    console.log("publicKey", publicKey);
-  }, [wallets, publicKey, connected]);
 
   return (
     <DropdownMenu>
@@ -101,9 +87,7 @@ export default function WalletButton() {
                 <DropdownMenuItem
                   key={idx}
                   onClick={() => {
-                    console.log("clicked");
                     connectWallet(item.adapter);
-                    console.log("connected might be");
                   }}
                   className="cursor-pointer"
                 >

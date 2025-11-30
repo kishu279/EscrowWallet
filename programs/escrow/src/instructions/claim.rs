@@ -1,4 +1,4 @@
-use crate::{escrow, events::EscrowClaimedEvent, state::Escrow};
+use crate::{events::EscrowClaimedEvent, state::Escrow};
 use anchor_lang::prelude::*;
 // use crate::events::EscrowClaimedEvent;
 

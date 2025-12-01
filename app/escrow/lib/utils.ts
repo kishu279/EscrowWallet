@@ -11,7 +11,7 @@ import {
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import idl from "./../utils/escrow.json";
-import { EscrowProgram } from "./../utils/escrow";
+import { Escrow as EscrowProgram } from "./../utils/escrow";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -56,6 +56,50 @@ export async function getAllEscrows(provider: anchor.Provider) {
   } catch (err) {
     console.error("Error fetching escrows:", err);
     return [];
+  }
+}
+
+export async function cancelEscrow(
+  provider: anchor.Provider,
+  senderPubKey: PublicKey
+) {
+  const program = new Program<EscrowProgram>(idl as any, provider);
+
+  try {
+    const [escrowPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("escrow"), senderPubKey.toBuffer()],
+      program.programId
+    );
+
+    if (!escrowPda) {
+      return null;
+    }
+
+    const escrowAccount = await program.account.escrow.fetch(escrowPda);
+
+    const initializerTokenAccount = await getAssociatedTokenAddressSync(
+      escrowAccount.initializerMint,
+      senderPubKey
+    );
+
+    const tx = await program.methods
+      .cancelEscrow()
+      .accounts({
+        escrow: escrowPda,
+        initializer: senderPubKey,
+        initializerTokenAccount: initializerTokenAccount,
+        initializerMint: escrowAccount.initializerMint,
+        program: program.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      // .signers([provider.wallet?.payer!])
+      .rpc();
+
+    console.log("Escrow cancelled with tx:", tx);
+    return tx;
+  } catch (err) {
+    console.error("Error fetching escrows:", err);
+    return null;
   }
 }
 

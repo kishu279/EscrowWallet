@@ -1,17 +1,23 @@
 import NavHeader from "@/components/header";
 import Transactions from "@/components/transactions";
-import EscrowList from "@/components/escrow-list";
+import MyEscrow from "@/components/my-escrow";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <NavHeader />
-      <main className="flex-1 flex items-center justify-center p-8">
-        {/* <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
-        <div>
-          <Transactions />
+      <main className="flex-1 p-8">
+        <div className="space-y-12">
+          {/* Transactions Section */}
+          <div>
+            <Transactions />
+          </div>
+
+          {/* My Escrow PDA Section */}
+          <div>
+            <MyEscrow />
+          </div>
         </div>
-        {/* </div> */}
       </main>
     </div>
   );

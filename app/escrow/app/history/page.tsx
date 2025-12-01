@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useSolanaProvider } from "@/hook/solana-provider";
 import { getAllEscrows, shortenAddress } from "@/lib/utils";
+import { formatDate, formatAmount, copyToClipboard } from "@/lib/helper";
 import { Button } from "@/components/ui/button";
 import {
   RefreshCw,
@@ -47,30 +48,11 @@ export default function HistoryPage() {
     fetchEscrows();
   }, [connected, publicKey, provider]);
 
-  const formatDate = (timestamp: any) => {
-    try {
-      const date = new Date(timestamp.toNumber() * 1000);
-      return date.toLocaleString();
-    } catch {
-      return "N/A";
-    }
-  };
-
-  const formatAmount = (amount: any, decimals = 9) => {
-    try {
-      return (Number(amount.toString()) / Math.pow(10, decimals)).toFixed(4);
-    } catch {
-      return "0";
-    }
-  };
-
-  const copyToClipboard = async (address: string) => {
-    try {
-      await navigator.clipboard.writeText(address);
+  const handleCopyToClipboard = async (address: string) => {
+    const success = await copyToClipboard(address);
+    if (success) {
       setCopiedAddress(address);
       setTimeout(() => setCopiedAddress(null), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
     }
   };
 
@@ -186,7 +168,9 @@ export default function HistoryPage() {
                               {shortenAddress(escrow.address)}
                             </span>
                             <button
-                              onClick={() => copyToClipboard(escrow.address)}
+                              onClick={() =>
+                                handleCopyToClipboard(escrow.address)
+                              }
                               className="p-1 hover:bg-gray-200 rounded transition-colors"
                             >
                               {copiedAddress === escrow.address ? (

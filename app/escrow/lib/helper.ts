@@ -91,4 +91,81 @@ function convertToUIAmount(rawAmount: number, decimals: number): number {
   return rawAmount / Math.pow(10, decimals);
 }
 
-export { wrapSol, unwrapSol, convertToRawAmount, convertToUIAmount };
+/**
+ * Format a timestamp (BN) to a locale string
+ * @param timestamp - The timestamp in BN format (seconds)
+ * @returns The formatted date string or "N/A" if invalid
+ */
+function formatDate(timestamp: any): string {
+  try {
+    const date = new Date(timestamp.toNumber() * 1000);
+    return date.toLocaleString();
+  } catch {
+    return "N/A";
+  }
+}
+
+/**
+ * Format a token amount from raw to UI representation with decimals
+ * @param amount - The raw token amount
+ * @param decimals - The number of decimals for the token (default: 9)
+ * @returns The formatted amount string with 4 decimal places
+ */
+function formatAmount(amount: any, decimals: number = 9): string {
+  try {
+    return (Number(amount.toString()) / Math.pow(10, decimals)).toFixed(4);
+  } catch {
+    return "0";
+  }
+}
+
+/**
+ * Copy text to clipboard and return success status
+ * @param text - The text to copy to clipboard
+ * @returns Promise<boolean> - True if successful, false otherwise
+ */
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    console.error("Failed to copy:", err);
+    return false;
+  }
+}
+
+/**
+ * Calculate and format the time remaining until expiry
+ * @param expiry - The expiry timestamp in BN format
+ * @returns A formatted string showing time remaining or "Expired" or "N/A"
+ */
+function getTimeRemaining(expiry: any): string {
+  try {
+    const expiryTime = expiry.toNumber() * 1000;
+    const now = Date.now();
+    const diff = expiryTime - now;
+
+    if (diff <= 0) return "Expired";
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  } catch {
+    return "N/A";
+  }
+}
+
+export {
+  wrapSol,
+  unwrapSol,
+  convertToRawAmount,
+  convertToUIAmount,
+  formatDate,
+  formatAmount,
+  copyToClipboard,
+  getTimeRemaining,
+};

@@ -17,3 +17,10 @@ pub struct EscrowClaimedEvent {
     pub amount: u64,
     pub expiry: i64,
 }
+
+#[event]
+pub struct EscrowCancelledEvent {
+    pub amount: u64,
+    pub expiry: i64,
+    pub mssg: String,
+}

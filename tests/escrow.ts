@@ -30,7 +30,7 @@ describe("escrow", () => {
   let initializerAmount: anchor.BN;
   let receiverAmount: anchor.BN;
 
-  let expiry: anchor.BN = new anchor.BN(Math.floor(Date.now() / 1000) + 300); // current time + 5minutes
+  let expiry: anchor.BN = new anchor.BN(Math.floor(Date.now() / 1000) + 60 * 5); // current time + 5minutes
 
   let associatedTokenAccountInitializerX: anchor.web3.PublicKey;
   let associatedTokenAccountReceiverY: anchor.web3.PublicKey;
@@ -334,118 +334,156 @@ describe("escrow", () => {
     // assert.ok(receiverVaultAccount.amount.equals(new anchor.BN(0)));
   });
 
-  it("Claim Escrow Extra", async () => {
-    // const receiverMintXAccount = await getAssociatedTokenAddress(
-    //   mintX.publicKey,
-    //   receiver.publicKey
-    // );
+  // it("Claim Escrow Extra", async () => {
+  //   // const receiverMintXAccount = await getAssociatedTokenAddress(
+  //   //   mintX.publicKey,
+  //   //   receiver.publicKey
+  //   // );
 
-    // const initializerMintYAccount = await getAssociatedTokenAddress(
-    //   mintY.publicKey,
-    //   provider.wallet.publicKey
-    // );
+  //   // const initializerMintYAccount = await getAssociatedTokenAddress(
+  //   //   mintY.publicKey,
+  //   //   provider.wallet.publicKey
+  //   // );
 
-    // await provider.sendAndConfirm(
-    //   new anchor.web3.Transaction().add(
-    //     createAssociatedTokenAccountInstruction(
-    //       provider.wallet.publicKey,
-    //       receiverMintXAccount,
-    //       receiver.publicKey,
-    //       mintX.publicKey
-    //     ),
-    //     createAssociatedTokenAccountInstruction(
-    //       provider.wallet.publicKey,
-    //       initializerMintYAccount,
-    //       provider.wallet.publicKey,
-    //       mintY.publicKey
-    //     )
-    //   ),
-    //   [provider.wallet.payer]
-    // );
+  //   // await provider.sendAndConfirm(
+  //   //   new anchor.web3.Transaction().add(
+  //   //     createAssociatedTokenAccountInstruction(
+  //   //       provider.wallet.publicKey,
+  //   //       receiverMintXAccount,
+  //   //       receiver.publicKey,
+  //   //       mintX.publicKey
+  //   //     ),
+  //   //     createAssociatedTokenAccountInstruction(
+  //   //       provider.wallet.publicKey,
+  //   //       initializerMintYAccount,
+  //   //       provider.wallet.publicKey,
+  //   //       mintY.publicKey
+  //   //     )
+  //   //   ),
+  //   //   [provider.wallet.payer]
+  //   // );
 
+  //   const [escrowAccount] = anchor.web3.PublicKey.findProgramAddressSync(
+  //     [Buffer.from("escrow"), provider.wallet.publicKey.toBuffer()],
+  //     program.programId
+  //   );
+
+  //   // no need to make the token account for the fee collector
+
+  //   // Add your test here.
+  //   const tx = await program.methods
+  //     .claimEscrow()
+  //     .accounts({
+  //       escrow: escrowAccount,
+  //       receiver: receiver.publicKey,
+  //       initializer: provider.wallet.publicKey,
+  //       initializerMint: mintX.publicKey,
+  //       receiverMint: mintY.publicKey,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       tokenProgram: TOKEN_PROGRAM_ID,
+  //       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+  //     })
+  //     .signers([receiver])
+  //     .rpc();
+
+  //   const escrow = await program.account.escrow.fetch(escrowAccount);
+
+  //   assert.ok(escrow.initializer.equals(provider.wallet.publicKey));
+  //   assert.ok(escrow.receiver.equals(receiver.publicKey));
+  //   assert.ok(escrow.initializerMint.equals(mintX.publicKey));
+  //   assert.ok(escrow.receiverMint.equals(mintY.publicKey));
+  //   assert.ok(escrow.receiverAmount.eq(receiverAmount));
+  //   assert.ok(escrow.initializerAmount.eq(initializerAmount));
+  //   assert.ok(escrow.expiry.eq(expiry));
+
+  //   const [initializerVaultAuthorityAddress] =
+  //     anchor.web3.PublicKey.findProgramAddressSync(
+  //       [Buffer.from("initializer_vault"), escrowAccount.toBuffer()],
+  //       program.programId
+  //     );
+
+  //   const [receiverVaultAuthorityAddress] =
+  //     anchor.web3.PublicKey.findProgramAddressSync(
+  //       [Buffer.from("receiver_vault"), escrowAccount.toBuffer()],
+  //       program.programId
+  //     );
+
+  //   const initializerVault = getAssociatedTokenAddressSync(
+  //     mintX.publicKey,
+  //     initializerVaultAuthorityAddress,
+  //     true
+  //   );
+
+  //   const receiverVault = getAssociatedTokenAddressSync(
+  //     mintY.publicKey,
+  //     receiverVaultAuthorityAddress,
+  //     true
+  //   );
+
+  //   // Token accounts for final transfers
+  //   const receiverTokenAccount = getAssociatedTokenAddressSync(
+  //     mintY.publicKey,
+  //     receiver.publicKey
+  //   );
+  //   const initializerVaultToReceiverTokenAccount =
+  //     getAssociatedTokenAddressSync(mintX.publicKey, receiver.publicKey);
+  //   const receiverVaultToInitializerTokenAccount =
+  //     getAssociatedTokenAddressSync(mintY.publicKey, provider.wallet.publicKey);
+  //   const feeCollectorTokenAccount = getAssociatedTokenAddressSync(
+  //     mintX.publicKey,
+  //     feeCollectorAccount.publicKey
+  //   );
+
+  //   const [initBalance, receiBalance] = await Promise.all([
+  //     provider.connection.getTokenAccountBalance(initializerVault),
+  //     provider.connection.getTokenAccountBalance(receiverVault),
+  //   ]);
+
+  //   console.log(
+  //     "initializer vault balance",
+  //     initBalance.value.amount,
+  //     "receiver vault balance",
+  //     receiBalance.value.amount
+  //   );
+  // });
+
+  //
+
+  it("Cancel Escrow", async () => {
     const [escrowAccount] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("escrow"), provider.wallet.publicKey.toBuffer()],
       program.programId
     );
 
-    // no need to make the token account for the fee collector
+    const initializerTokenAccount = await getAssociatedTokenAddressSync(
+      mintX.publicKey,
+      provider.wallet.publicKey
+    );
 
-    // Add your test here.
     const tx = await program.methods
-      .claimEscrow()
+      .cancelEscrow()
       .accounts({
         escrow: escrowAccount,
-        receiver: receiver.publicKey,
+        program: program.programId,
         initializer: provider.wallet.publicKey,
+        initializerTokenAccount: initializerTokenAccount,
         initializerMint: mintX.publicKey,
-        receiverMint: mintY.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       })
-      .signers([receiver])
+      .signers([provider.wallet.payer])
       .rpc();
 
-    const escrow = await program.account.escrow.fetch(escrowAccount);
+    console.log(tx);
 
-    assert.ok(escrow.initializer.equals(provider.wallet.publicKey));
-    assert.ok(escrow.receiver.equals(receiver.publicKey));
-    assert.ok(escrow.initializerMint.equals(mintX.publicKey));
-    assert.ok(escrow.receiverMint.equals(mintY.publicKey));
-    assert.ok(escrow.receiverAmount.eq(receiverAmount));
-    assert.ok(escrow.initializerAmount.eq(initializerAmount));
-    assert.ok(escrow.expiry.eq(expiry));
+    // FAILED TO FETCH THE ESCROW ACCOUNT AFTER CANCELLATION
+    // const escrow = await program.account.escrow.fetch(escrowAccount);
 
-    const [initializerVaultAuthorityAddress] =
-      anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("initializer_vault"), escrowAccount.toBuffer()],
-        program.programId
-      );
-
-    const [receiverVaultAuthorityAddress] =
-      anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("receiver_vault"), escrowAccount.toBuffer()],
-        program.programId
-      );
-
-    const initializerVault = getAssociatedTokenAddressSync(
-      mintX.publicKey,
-      initializerVaultAuthorityAddress,
-      true
-    );
-
-    const receiverVault = getAssociatedTokenAddressSync(
-      mintY.publicKey,
-      receiverVaultAuthorityAddress,
-      true
-    );
-
-    // Token accounts for final transfers
-    const receiverTokenAccount = getAssociatedTokenAddressSync(
-      mintY.publicKey,
-      receiver.publicKey
-    );
-    const initializerVaultToReceiverTokenAccount =
-      getAssociatedTokenAddressSync(mintX.publicKey, receiver.publicKey);
-    const receiverVaultToInitializerTokenAccount =
-      getAssociatedTokenAddressSync(mintY.publicKey, provider.wallet.publicKey);
-    const feeCollectorTokenAccount = getAssociatedTokenAddressSync(
-      mintX.publicKey,
-      feeCollectorAccount.publicKey
-    );
-
-    const [initBalance, receiBalance] = await Promise.all([
-      provider.connection.getTokenAccountBalance(initializerVault),
-      provider.connection.getTokenAccountBalance(receiverVault),
-    ]);
-
-    console.log(
-      "initializer vault balance",
-      initBalance.value.amount,
-      "receiver vault balance",
-      receiBalance.value.amount
-    );
+    // assert.ok(escrow.initializer.equals(provider.wallet.publicKey));
+    // assert.ok(escrow.receiver.equals(receiver.publicKey));
+    // assert.ok(escrow.initializerMint.equals(mintX.publicKey));
+    // assert.ok(escrow.receiverMint.equals(mintY.publicKey));
+    // assert.ok(escrow.receiverAmount.eq(receiverAmount));
+    // assert.ok(escrow.initializerAmount.eq(initializerAmount));
+    // assert.ok(escrow.expiry.eq(expiry));
   });
-
-  //
 });

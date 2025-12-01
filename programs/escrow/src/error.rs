@@ -10,4 +10,7 @@ pub enum EscrowError {
 
     #[msg("Invalid Fee Collector")]
     InvalidFeeCollector,
+
+    #[msg("Escrow is not expired")]
+    EscrowNotExpired,
 }

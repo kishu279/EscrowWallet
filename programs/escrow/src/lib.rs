@@ -37,4 +37,8 @@ pub mod escrow {
     pub fn claim_escrow(ctx: Context<Claim>) -> Result<()> {
         Claim::claim_escrow(ctx)
     }
+
+    pub fn cancel_escrow(ctx: Context<CancelEscrow>) -> Result<()> {
+        CancelEscrow::cancel_escrow(ctx)
+    }
 }

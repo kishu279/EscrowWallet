@@ -18,7 +18,8 @@ pub struct Claim<'info> {
         has_one = receiver,
         has_one = initializer_mint,
         has_one = receiver_mint,
-        has_one = fee_collector
+        has_one = fee_collector,
+        close = initializer,
     )]
     pub escrow: Account<'info, Escrow>,
 
